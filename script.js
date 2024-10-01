@@ -8,10 +8,14 @@ document.getElementById("send-btn").addEventListener("click", async function() {
     // Clear the input field
     document.getElementById("user-input").value = "";
 
+    // Show a "waiting" message while the API processes the response
+    const waitingMessageId = addMessageToChat("The AI is thinking... Please wait.", "bot");
+
     // Send the input to the Hugging Face API and get the response
     const response = await fetchAPI(userInput);
 
-    // Add bot message with formatting to the chat box
+    // Remove the waiting message and replace it with the actual response
+    removeMessage(waitingMessageId);
     addMessageToChat(response, "bot", true);
 });
 
@@ -32,6 +36,16 @@ function addMessageToChat(message, sender, isHTML = false) {
     messageElement.appendChild(messageContent);
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
+
+    // Return the message element so it can be removed later (for waiting message)
+    return messageElement;
+}
+
+function removeMessage(messageElement) {
+    // Remove the specified message element from the chat box
+    if (messageElement) {
+        messageElement.remove();
+    }
 }
 
 function formatMarkdown(text) {
