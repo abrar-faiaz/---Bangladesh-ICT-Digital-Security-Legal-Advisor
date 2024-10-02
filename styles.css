@@ -16,9 +16,9 @@ body {
 
 .chat-container {
     background-color: white;
-    width: 600px; /* Increase the width */
+    width: 600px; /* Increased width */
     max-width: 100%;
-    height: 700px; /* Increase height if necessary */
+    height: 700px; /* Increased height */
     display: flex;
     flex-direction: column;
     border-radius: 10px;

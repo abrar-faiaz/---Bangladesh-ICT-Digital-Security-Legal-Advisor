@@ -50,8 +50,20 @@ function removeMessage(messageElement) {
 
 function formatMarkdown(text) {
     // Convert **bold** to <strong>bold</strong>
-    return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
                .replace(/\*(.*?)\*/g, "<em>$1</em>"); // Handle *italic* if needed
+
+    // Convert * item to <li> in a <ul> structure (handling bullets)
+    text = text.replace(/\n\s*\*\s/g, "</li><li>") // Convert new lines starting with "* " into list items
+               .replace(/^(\*\s)/gm, "<ul><li>")    // Convert the first "* " into <ul><li>
+               .replace(/<\/li>\s*$/, "</li></ul>"); // Close the list structure
+    
+    // Handle numbered lists (1., 2., etc.)
+    text = text.replace(/(\d+)\.\s/g, "</li><li>")   // Convert numbered lines like "1. " into list items
+               .replace(/<\/li><li>(\d+)\.\s/g, "<ol><li>") // Start ordered list when first item found
+               .replace(/<\/li>\s*$/, "</li></ol>");  // Close the ordered list
+
+    return text;
 }
 
 async function fetchAPI(userQuestion) {
